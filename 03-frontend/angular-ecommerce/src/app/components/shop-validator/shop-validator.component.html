@@ -1,0 +1,9 @@
+<div *ngIf="formControl?.invalid && (formControl?.touched || formControl?.dirty)" class="alert alert-danger mt-1">
+    <div *ngIf="formControl?.errors?.['required'] || formControl?.errors?.['notOnlyWhitespace']">
+        {{fieldName}} is required
+    </div>
+    <div *ngIf="formControl?.errors?.['minlength']">
+        {{fieldName}} must be at least {{maxLength}} characters
+    </div>
+    <div *ngIf="formControl?.errors?.['pattern']">{{fieldName}} must have a valid format</div>
+</div>

@@ -1,0 +1,23 @@
+<div class="detail-section">
+    <div class="container-fluid">
+        <img [src]=product?.imageUrl class="detail-img">
+        <h3>{{ product?.name }}</h3>
+        <div class="price">{{ product?.unitPrice | currency:'USD' }}</div>
+        <button (click)="addToCart (product)" class="btn btn-primary">Add to cart</button>
+
+        <hr>
+        <h4 *ngIf="product">Description</h4>
+        <p>{{ product?.description }}</p>
+
+
+        <!-- If there are no products with a specific id then display a message -->
+        <div *ngIf="!product" 
+        class="alert alert-warning col-md-12"
+        role="alert">
+            Product not found.
+        </div>
+
+        <a routerLink="products" class="mt-5">Back to Product List</a>  
+
+    </div>
+</div>
