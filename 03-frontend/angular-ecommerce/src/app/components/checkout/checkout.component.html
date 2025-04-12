@@ -1,0 +1,292 @@
+<div class="main-content page-m">
+    <div class="section-content section-content-p30">
+        <div class="container-fluid">
+
+            <form [formGroup]="chkFormGroup" (ngSubmit)="onSubmit()">
+                <div formGroupName="customer" class="form-area">
+                    <h3>Customer</h3>
+                    <!--First Name-->
+                    <div class="row">
+                        <div class="col-md-2"><label>First Name</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input type="text" formControlName="firstName"/>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="firstName" [fieldName]="'First Name'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Last Name-->
+                    <div class="row">
+                        <div class="col-md-2"><label>Last Name</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input type="text" formControlName="lastName"/>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="lastName" [fieldName]="'Last Name'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Email-->
+                    <div class="row">
+                        <div class="col-md-2"><label>Email</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input type="text" formControlName="email"/>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="email" [fieldName]="'Email'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div formGroupName="shippingAddress" class="form-area">
+                    <h3>Shipping Address</h3>
+                     <!--Country-->
+                     <div class="row">
+                        <div class="col-md-2"><label>Country</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="country" (ngModelChange)="onChangeShippingAddCountry($event)">
+                                    <option *ngFor="let country of countryList" [ngValue]="country">{{country.name}}</option>
+                                </select>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="shpAddCountry" [fieldName]="'Country'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Street-->
+                    <div class="row">
+                        <div class="col-md-2"><label>Street</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input type="text" formControlName="street"/>
+                                 <!--Validations-->
+                                 <app-shop-validator [formControl]="shpAddStreet" [fieldName]="'Street'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--City-->
+                    <div class="row">
+                        <div class="col-md-2"><label>City</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input type="text" formControlName="city"/>
+                                 <!--Validations-->
+                                 <app-shop-validator [formControl]="shpAddCity" [fieldName]="'City'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--State-->
+                    <div class="row">
+                        <div class="col-md-2"><label>State</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="state">
+                                    <option *ngFor="let state of shippingAddStateList" [ngValue]="state">
+                                     {{state.name}}
+                                    </option>
+                                </select>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="shpAddState" [fieldName]="'State'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Zip Code-->
+                    <div class="row">
+                        <div class="col-md-2"><label>Zip Code</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input type="text" formControlName="zipCode"/>
+                                 <!--Validations-->
+                                 <app-shop-validator [formControl]="shpAddZipCode" [fieldName]="'Zip Code'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Copy Shipping to Billing Address -->
+                <div class="input-space">
+                    <label class="au-checkbox">
+                        <input type="checkbox" (change)="copyShippingToBillingAddress($event)"/>
+                        <span class="au-checkmark"></span> Billig Address same as Shipping Address
+                    </label>
+                </div>
+            
+                <div formGroupName="billingAddress" class="form-area">
+                    <h3>Billing Address</h3>
+                     <!--Country-->
+                     <div class="row">
+                        <div class="col-md-2"><label>Country</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="country" (ngModelChange)="onChangeBillingAddCountry($event)" >
+                                    <option *ngFor="let country of countryList" [ngValue]="country">{{country.name}}</option>
+                                </select>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="billAddCountry" [fieldName]="'Country'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Street-->
+                    <div class="row">
+                        <div class="col-md-2"><label>Street</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input type="text" formControlName="street"/>
+                                 <!--Validations-->
+                                 <app-shop-validator [formControl]="billAddStreet" [fieldName]="'Street'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--City-->
+                    <div class="row">
+                        <div class="col-md-2"><label>City</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input type="text" formControlName="city"/>
+                                 <!--Validations-->
+                                 <app-shop-validator [formControl]="billAddCity" [fieldName]="'City'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--State-->
+                    <div class="row">
+                        <div class="col-md-2"><label>State</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="state">
+                                    <option *ngFor="let state of billingAddStateList" [ngValue]="state">
+                                        {{state.name}}
+                                    </option>
+                                </select>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="billAddState" [fieldName]="'State'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Zip Code-->
+                    <div class="row">
+                        <div class="col-md-2"><label>Zip Code</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input type="text" formControlName="zipCode"/>
+                                 <!--Validations-->
+                                 <app-shop-validator [formControl]="billAddZipCode" [fieldName]="'Zip Code'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div formGroupName="creditCard" class="form-area">
+                    <h3>Credit Card</h3>
+                     <!--Card Type-->
+                     <div class="row">
+                        <div class="col-md-2"><label>Card Type</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="cardType">
+                                    <option>Visa</option>
+                                    <option>Mastercard</option>
+                                </select>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="billAddZipCode" [fieldName]="'Zip Code'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Name On Card-->
+                    <div class="row">
+                        <div class="col-md-2"><label>Name On Card</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input type="text" formControlName="nameOnCard"/>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="nameOnCard" [fieldName]="'Name On Card'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Card Number-->
+                    <div class="row">
+                        <div class="col-md-2"><label>Card Number</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input type="number" formControlName="cardNumber"/>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="cardNumber" [fieldName]="'Card Number'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Security Code-->
+                    <div class="row">
+                        <div class="col-md-2"><label>Security Code</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <input type="number" formControlName="securityCode"/>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="securityCode" [fieldName]="'Security Code'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Exipration Month-->
+                    <div class="row">
+                        <div class="col-md-2"><label>Exipration Month</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="exiprationMonth">
+                                    <option *ngFor="let month of creditCardMonths">{{ month }}</option>
+                                </select>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="exiprationMonth" [fieldName]="'Exipration Month'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                    <!--Exipration Year-->  
+                    <div class="row">
+                        <div class="col-md-2"><label>Exipration Year</label></div>
+                        <div class="col-md-9">
+                            <div class="input-space">
+                                <select formControlName="exiprationYear" (ngModelChange)="onChangeCardYear($event)">
+                                    <option *ngFor="let year of creditCardYears">{{ year }}</option>
+                                </select>
+                                <!--Validations-->
+                                <app-shop-validator [formControl]="exiprationYear" [fieldName]="'Exipration Year'">
+                                </app-shop-validator>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!--Order Details-->
+                <div class="form-area">
+                    <h3>Review your order</h3>
+                    <p>Total Quantity: {{ totalQuantity }}</p>
+                    <p>Shipping: FREE</p>
+                    <p>Total Price: {{ totalPrice | currency:'USD' }}</p>
+
+                </div>
+
+                <div class="text-center">
+                    <button type="submit" class="btn btn-info">Purchase</button>
+                </div>
+            
+            </form>
+        </div>
+    </div>
+</div>
