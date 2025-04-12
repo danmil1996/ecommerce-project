@@ -1,15 +1,20 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
+import { Router } from '@angular/router';
 import { Country } from 'src/app/common/country';
+import { Order } from 'src/app/common/order';
+import { OrderItem } from 'src/app/common/order-item';
+import { Purchase } from 'src/app/common/purchase';
 import { State } from 'src/app/common/state';
 import { CartService } from 'src/app/services/cart-service.service';
-import { ShopFormService } from 'src/app/services/shop-form-service.service';
+import { CheckoutService } from 'src/app/services/checkout.service';
+import { ShopFormService } from 'src/app/services/shop-form.service';
 import { ShopValidator } from 'src/app/validators/shop-validator';
 
 @Component({
   selector: 'app-checkout',
   templateUrl: './checkout.component.html',
-  styleUrls: ['./checkout.component.css']
+  styleUrls: []
 })
 export class CheckoutComponent implements OnInit {
 
@@ -21,7 +26,7 @@ export class CheckoutComponent implements OnInit {
   creditCardMonths: number[] = [];
   creditCardYears: number[] = [];
 
-  // COuntry and State
+  // Countries and States
   countryList: Country[] = [];
   billingAddStateList:  State[] = [];
   shippingAddStateList: State[] = [];
@@ -31,7 +36,9 @@ export class CheckoutComponent implements OnInit {
   constructor(
     private formBuilder: FormBuilder,
     private service: ShopFormService,
-    private cartService: CartService
+    private cartService: CartService,
+    private checkoutService: CheckoutService,
+    private router: Router
   ) { }
 
   ngOnInit(): void {
@@ -131,8 +138,77 @@ export class CheckoutComponent implements OnInit {
   onSubmit () {
     if (this.chkFormGroup.invalid) {
       this.chkFormGroup.markAllAsTouched();
-      return;
+    } else { 
+      this.sendTheOrder();
     }
+  }
+
+  sendTheOrder() {
+    let purchase = this.createPurchaseObject();
+
+    // call REST API via checkout service
+    this.checkoutService.placeOrder(purchase).subscribe({
+      next: response => {
+        alert(`Your order has been received.\nOrder tracking number: ${response.orderTrackingNumber}`);
+        this.resetCart();
+      },
+      error: err => {
+        alert(`There was an error: ${err.message}`);
+      }
+    });
+  }
+
+  resetCart() {
+    // reset cart data
+    this.cartService.cartItems = [];
+    this.cartService.totalPrice.next(0);
+    this.cartService.totalQuantity.next(0);
+    // reset form
+    this.chkFormGroup.reset();
+    // redirect to the shop page
+    this.router.navigateByUrl("/products");
+  }
+
+  private createPurchaseObject() {
+    let order = new Order();
+    order.totalPrice = this.totalPrice;
+    order.totalQuantity = this.totalQuantity;
+
+    // get cart items
+    const cartItems = this.cartService.cartItems;
+
+    // create order items form cart items
+    let orderItems: OrderItem[] = cartItems.map(tmpCartItem => new OrderItem(tmpCartItem));
+
+    // populate purchase - customer, order, order items, shipping and billing address
+    let purchase = new Purchase();
+    purchase.order = order;
+    purchase.orderItems = orderItems;
+    purchase.customer = this.chkFormGroup.controls['customer'].value;
+
+    this.setShipAndBillAddresses(purchase);
+    return purchase;
+  }
+
+  private setShipAndBillAddresses(purchase: Purchase): void {
+    // Shipping address
+    purchase.shippingAddress = this.chkFormGroup.controls['shippingAddress'].value;
+    // Shipping - Country
+    const shipCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress?.country));
+    if (purchase.shippingAddress) purchase.shippingAddress.country = shipCountry.name;
+    // Shipping - State
+    const shipState: State = JSON.parse(JSON.stringify(purchase.shippingAddress?.state));
+    if (purchase.shippingAddress && purchase.shippingAddress.state) purchase.shippingAddress.state = shipState.name;
+
+    // Billing address
+    purchase.billingAddress = this.chkFormGroup.controls['billingAddress'].value;
+    // Billing - Country
+    const billCountry: Country = JSON.parse(JSON.stringify(purchase.shippingAddress?.country));
+    purchase.billingAddress = this.chkFormGroup.controls['billingAddress'].value;
+    if (purchase.billingAddress) purchase.billingAddress.country = billCountry.name;
+    // Billing - State
+    const billState: State = JSON.parse(JSON.stringify(purchase.billingAddress?.state));
+    if (purchase.billingAddress && purchase.billingAddress.state) purchase.billingAddress.state = billState.name;
   }
 
   /************ CREDIT CARD ***************/

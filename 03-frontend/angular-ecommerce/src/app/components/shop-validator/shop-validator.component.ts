@@ -4,7 +4,7 @@ import { ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR } from '@angular/f
 @Component({
   selector: 'app-shop-validator',
   templateUrl: './shop-validator.component.html',
-  styleUrls: ['./shop-validator.component.css'],
+  styleUrls: [],
   providers: [
     {
       provide: NG_VALUE_ACCESSOR,
