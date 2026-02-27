@@ -3,6 +3,7 @@ package com.danmil.ecommerce.service;
 import com.danmil.ecommerce.dao.CustomerRepository;
 import com.danmil.ecommerce.dto.Purchase;
 import com.danmil.ecommerce.dto.PurchaseResponse;
+import com.danmil.ecommerce.entity.Customer;
 import com.danmil.ecommerce.entity.Order;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,8 +42,13 @@ public class CheckOutServiceImpl implements CheckoutService {
         // populate order with billing and shipping address
         order.setBillingAddress  (purchase.getBillingAddress ());
         order.setShippingAddress (purchase.getShippingAddress ());
+        // Customer
+        var customer = order.getCustomer();
+        // Check if is an existing customer
+        Customer dbCustomer = customerRepository.findByEmail (customer.getEmail ());
+        if (dbCustomer != null) customer = dbCustomer;
         // populate customer with order
-        purchase.getCustomer ().add (order);
+        customer.add (order);
     }
 
     private String generateTrackingNumber () {

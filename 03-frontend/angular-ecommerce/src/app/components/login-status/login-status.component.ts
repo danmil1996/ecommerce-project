@@ -1,42 +1,43 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { OKTA_AUTH, OktaAuthStateService } from '@okta/okta-angular';
-import { OktaAuth } from '@okta/okta-auth-js';
+import { DOCUMENT } from '@angular/common';
+import { Component, Inject } from '@angular/core';
+import { AuthService } from '@auth0/auth0-angular';
 
 @Component({
   selector: 'app-login-status',
   templateUrl: './login-status.component.html',
   styleUrls: ['./login-status.component.css']
 })
-export class LoginStatusComponent implements OnInit {
+export class LoginStatusComponent {
 
-  isAuthenticated: boolean | undefined = false;
-  userFullName: string | undefined = '';
+  isAuthenticated: boolean = false;
+  userEmail: string | undefined;
+  storage: Storage = sessionStorage;
 
-
-  constructor(
-    private oktaAuthService: OktaAuthStateService,
-    @Inject(OKTA_AUTH) private oktaAuth: OktaAuth
-  ) { }
+  constructor(private auth: AuthService, @Inject(DOCUMENT) private doc: Document) {}
 
   ngOnInit(): void {
-    this.oktaAuthService.authState$.subscribe(
-      (result) => {
-        this.isAuthenticated = result.isAuthenticated;
-        this.getUserDetails();
+    // Track login status
+    this.auth.isAuthenticated$.subscribe(authenticated => {
+      this.isAuthenticated = authenticated;
+      console.log('User is authenticated:', this.isAuthenticated);
+    });
+
+    // Track user profile
+    this.auth.user$.subscribe(user => {
+      this.userEmail = user?.email;
+      if (this.userEmail) {
+        this.storage.setItem('userEmail', JSON.stringify(this.userEmail));
       }
-    );
+      console.log('User Email:', this.userEmail);
+    });
   }
 
-  getUserDetails() {
-    if (this.isAuthenticated) {
-      this.oktaAuth.getUser().then(
-        (user) => this.userFullName = user.name as string
-      );
-    }
+  login(): void {
+    this.auth.loginWithRedirect();
   }
 
-  logout() {
-    this.oktaAuth.signOut();
+  logout(): void {
+    this.auth.logout({ returnTo: this.doc.location.origin });
   }
 
 }
