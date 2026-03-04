@@ -12,8 +12,16 @@ export class CartService {
   totalPrice: BehaviorSubject<number> = new BehaviorSubject<number>(0);
   totalQuantity: BehaviorSubject<number> = new BehaviorSubject<number>(0);
 
-  constructor() { }
+  storage: Storage = localStorage; // reference to local storage
 
+  constructor() { 
+    // Read data from storage
+    const data = this.storage.getItem('cartItems');
+    if (data) {
+      this.cartItems = JSON.parse(data);
+      this.calculateTotalPrice();
+    } // if
+  }
 
   addToCartProd (prod: Product) {
     const cartItem = new CartItem(prod);
@@ -42,6 +50,9 @@ export class CartService {
     // publish new values
     this.totalPrice.next(totalPriceValue);
     this.totalQuantity.next(totalQuantityValue);
+
+    // persist cart items
+    this.persistCartItems();
   }
 
   removeItem(item: CartItem) {
@@ -59,5 +70,15 @@ export class CartService {
       this.removeItem (item);
     }
   }
+
+  persistCartItems() {
+    this.storage.setItem('cartItems', JSON.stringify(this.cartItems));
+  }
   
+  clearCart() {
+    this.cartItems = [];
+    this.totalPrice.next(0);
+    this.totalQuantity.next(0);
+    this.persistCartItems(); // clear cart items in storage
+  }
 }

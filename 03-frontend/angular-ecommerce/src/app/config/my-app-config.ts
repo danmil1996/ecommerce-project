@@ -1,10 +1,16 @@
 export default {
-
-    oidc: {
-        clientId: '0oaouaaxyvym7VknY5d7',
-        issuer: 'https://dev-96467299.okta.com/oauth2/default',
-        redirectUri: 'http://localhost:4200/login/callback',
-        scopes: ['openid', 'profile', 'email']
-    }
-
-}
+    auth: {
+      domain: "dev-o52h3ox6vn4b8b7r.us.auth0.com",
+      clientId: "ZMiyI1xjkd8WzJ8dQkfu3yotmRH4WQKU",
+      authorizationParams: {
+        redirect_uri: "https://localhost:4200",
+        audience: "https://localhost:8443",
+      },
+    },
+    httpInterceptor: {
+      allowedList: [
+        'https://localhost:8443/api/orders/**',
+        'https://localhost:8443/api/checkout/purchase'
+      ],
+    },
+  }

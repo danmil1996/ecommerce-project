@@ -1,7 +1,8 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { map, Observable } from 'rxjs';
+import { environment } from 'src/environments/environment';
 import { Product } from '../common/product';
-import { map, Observable, of } from 'rxjs';
 import { ProductCategory } from '../common/product-category';
 
 @Injectable({
@@ -9,8 +10,8 @@ import { ProductCategory } from '../common/product-category';
 })
 export class ProductService {
 
-  private basetUrl: string = 'http://localhost:8080/api/products';
-  private categoryUrl: string = 'http://localhost:8080/api/product-category';
+  private basetUrl: string = environment.dmShopApiUrl + '/products';
+  private categoryUrl: string = environment.dmShopApiUrl + '/product-category';
 
   constructor(private httpClient: HttpClient) { }
 
@@ -31,7 +32,6 @@ export class ProductService {
   getProductListPaginate(page: number, 
                          size: number, 
                          catId: number): Observable<GetResponseProducts> {
-    // http://localhost:8080/api/products/search/findByCategoryId?id=1&page=0&size=10
     const searchUrl = `${this.basetUrl}/search/findByCategoryId?id=${catId}`
                     + `&page=${page}&size=${size}`;
     return this.httpClient.get<GetResponseProducts>(searchUrl);

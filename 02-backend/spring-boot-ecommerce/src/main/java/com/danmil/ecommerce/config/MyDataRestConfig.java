@@ -1,24 +1,22 @@
-package com.danmil.ecommerce.dao;
+package com.danmil.ecommerce.config;
 
-import com.danmil.ecommerce.entity.Country;
-import com.danmil.ecommerce.entity.Product;
-import com.danmil.ecommerce.entity.ProductCategory;
-import com.danmil.ecommerce.entity.State;
+import com.danmil.ecommerce.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.rest.core.config.RepositoryRestConfiguration;
 import org.springframework.data.rest.webmvc.config.RepositoryRestConfigurer;
 import org.springframework.http.HttpMethod;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
 import jakarta.persistence.EntityManager;
-import jakarta.persistence.metamodel.EntityType;
 
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
 
 @Configuration
 public class MyDataRestConfig implements RepositoryRestConfigurer {
+
+    @Value("${allowed.origins}")
+    private String[] allowedOrigins;
 
     private final EntityManager entityManager;
 
@@ -31,15 +29,20 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
     public void configureRepositoryRestConfiguration (RepositoryRestConfiguration config, CorsRegistry cors) {
         disableHttpMethods (config);
         exposeIds (config);
+
+        // configure CORS mapping
+        cors.addMapping ("/api/**").allowedOrigins (allowedOrigins);
     } // configureRepositoryRestConfiguration
 
     private void disableHttpMethods (RepositoryRestConfiguration config) {
         // POST, PUT, DELETE are disabled so these entities are in ReadOnly.
-        HttpMethod[] unsupportedMethods = { HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE };
+        HttpMethod[] unsupportedMethods = { HttpMethod.POST, HttpMethod.PUT, HttpMethod.DELETE, HttpMethod.PATCH };
         disableUnsupportedMethods (config, unsupportedMethods, Product.class);
         disableUnsupportedMethods (config, unsupportedMethods, ProductCategory.class);
         disableUnsupportedMethods (config, unsupportedMethods, State.class);
         disableUnsupportedMethods (config, unsupportedMethods, Country.class);
+        disableUnsupportedMethods (config, unsupportedMethods, Order.class);
+
     } // disableHttpMethods
 
     /**
@@ -54,7 +57,7 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 
     private void exposeIds (RepositoryRestConfiguration config) {
         // Array of entity types
-        var entityClasses = new ArrayList<Class> ();
+        var entityClasses = new ArrayList<Class<?>> ();
         // Get entity types for the entities.
         entityManager.getMetamodel()
                 .getEntities()

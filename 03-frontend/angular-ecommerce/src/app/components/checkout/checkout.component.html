@@ -190,87 +190,18 @@
                     </div>
                 </div>
 
-                <div formGroupName="creditCard" class="form-area">
-                    <h3>Credit Card</h3>
-                     <!--Card Type-->
-                     <div class="row">
-                        <div class="col-md-2"><label>Card Type</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <select formControlName="cardType">
-                                    <option>Visa</option>
-                                    <option>Mastercard</option>
-                                </select>
-                                <!--Validations-->
-                                <app-shop-validator [formControl]="billAddZipCode" [fieldName]="'Zip Code'">
-                                </app-shop-validator>
-                            </div>
-                        </div>
+                  <!-- Stripe Elements Credit Card Section -->
+                  <div formGroupName="creditCard" class="form-area">
+
+                    <h3>Credit or Debit Card</h3>
+
+                    <div id="card-element">
+                        <!-- a Stripe element will be inserted here -->
                     </div>
-                    <!--Name On Card-->
-                    <div class="row">
-                        <div class="col-md-2"><label>Name On Card</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input type="text" formControlName="nameOnCard"/>
-                                <!--Validations-->
-                                <app-shop-validator [formControl]="nameOnCard" [fieldName]="'Name On Card'">
-                                </app-shop-validator>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Card Number-->
-                    <div class="row">
-                        <div class="col-md-2"><label>Card Number</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input type="number" formControlName="cardNumber"/>
-                                <!--Validations-->
-                                <app-shop-validator [formControl]="cardNumber" [fieldName]="'Card Number'">
-                                </app-shop-validator>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Security Code-->
-                    <div class="row">
-                        <div class="col-md-2"><label>Security Code</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <input type="number" formControlName="securityCode"/>
-                                <!--Validations-->
-                                <app-shop-validator [formControl]="securityCode" [fieldName]="'Security Code'">
-                                </app-shop-validator>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Exipration Month-->
-                    <div class="row">
-                        <div class="col-md-2"><label>Exipration Month</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <select formControlName="exiprationMonth">
-                                    <option *ngFor="let month of creditCardMonths">{{ month }}</option>
-                                </select>
-                                <!--Validations-->
-                                <app-shop-validator [formControl]="exiprationMonth" [fieldName]="'Exipration Month'">
-                                </app-shop-validator>
-                            </div>
-                        </div>
-                    </div>
-                    <!--Exipration Year-->  
-                    <div class="row">
-                        <div class="col-md-2"><label>Exipration Year</label></div>
-                        <div class="col-md-9">
-                            <div class="input-space">
-                                <select formControlName="exiprationYear" (ngModelChange)="onChangeCardYear($event)">
-                                    <option *ngFor="let year of creditCardYears">{{ year }}</option>
-                                </select>
-                                <!--Validations-->
-                                <app-shop-validator [formControl]="exiprationYear" [fieldName]="'Exipration Year'">
-                                </app-shop-validator>
-                            </div>
-                        </div>
-                    </div>
+
+                    <!-- Used to display form errors -->
+                    <div id="card-errors" class="displayError.textContent!=='': 'alert alert-danger mt-1'"></div>
+
                 </div>
 
                 <!--Order Details-->
@@ -283,7 +214,7 @@
                 </div>
 
                 <div class="text-center">
-                    <button type="submit" class="btn btn-info">Purchase</button>
+                    <button type="submit" class="btn btn-info" [disabled]="isPaymentButDisabled">Purchase</button>
                 </div>
             
             </form>
