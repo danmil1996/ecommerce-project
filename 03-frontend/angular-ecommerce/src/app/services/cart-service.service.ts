@@ -75,4 +75,10 @@ export class CartService {
     this.storage.setItem('cartItems', JSON.stringify(this.cartItems));
   }
   
+  clearCart() {
+    this.cartItems = [];
+    this.totalPrice.next(0);
+    this.totalQuantity.next(0);
+    this.persistCartItems(); // clear cart items in storage
+  }
 }

@@ -19,7 +19,6 @@ export class LoginStatusComponent {
     // Track login status
     this.auth.isAuthenticated$.subscribe(authenticated => {
       this.isAuthenticated = authenticated;
-      console.log('User is authenticated:', this.isAuthenticated);
     });
 
     // Track user profile
@@ -28,7 +27,6 @@ export class LoginStatusComponent {
       if (this.userEmail) {
         this.storage.setItem('userEmail', JSON.stringify(this.userEmail));
       }
-      console.log('User Email:', this.userEmail);
     });
   }
 

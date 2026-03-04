@@ -3,8 +3,13 @@
 // The list of file replacements can be found in `angular.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  dmShopApiUrl: 'https://localhost:8443/api',
+    stripePublishableKey: "pk_test_51T6rxFF17Z0YRLzjgInFSgw07uTz2bJ9OYK1XlZGBAl1720XUhKwwlKxwsvEXn42EXWyd0JAkQeTerKMB1ClOv3000t98hplcL"
+
 };
+
+
 
 /*
  * For easier debugging in development mode, you can import the following file

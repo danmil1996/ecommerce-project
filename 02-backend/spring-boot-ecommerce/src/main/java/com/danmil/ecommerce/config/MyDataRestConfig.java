@@ -1,9 +1,6 @@
 package com.danmil.ecommerce.config;
 
-import com.danmil.ecommerce.entity.Country;
-import com.danmil.ecommerce.entity.Product;
-import com.danmil.ecommerce.entity.ProductCategory;
-import com.danmil.ecommerce.entity.State;
+import com.danmil.ecommerce.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Configuration;
@@ -44,6 +41,8 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
         disableUnsupportedMethods (config, unsupportedMethods, ProductCategory.class);
         disableUnsupportedMethods (config, unsupportedMethods, State.class);
         disableUnsupportedMethods (config, unsupportedMethods, Country.class);
+        disableUnsupportedMethods (config, unsupportedMethods, Order.class);
+
     } // disableHttpMethods
 
     /**
@@ -58,7 +57,7 @@ public class MyDataRestConfig implements RepositoryRestConfigurer {
 
     private void exposeIds (RepositoryRestConfiguration config) {
         // Array of entity types
-        var entityClasses = new ArrayList<Class> ();
+        var entityClasses = new ArrayList<Class<?>> ();
         // Get entity types for the entities.
         entityManager.getMetamodel()
                 .getEntities()
